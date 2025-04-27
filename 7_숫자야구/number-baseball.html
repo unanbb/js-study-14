@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>숫자야구</title>
+  </head>
+  <body>
+    <form id="form">
+      <input type="text" id="input" />
+      <button>확인</button>
+    </form>
+    <div id="logs"></div>
+    <script>
+      const $input = document.querySelector("#input");
+      const $form = document.querySelector("#form");
+      const $logs = document.querySelector("#logs");
+
+      const numbers = [];
+      for (let i = 1; i <= 9; i++) {
+        numbers.push(i);
+      }
+
+      const answer = [];
+      for (let i = 0; i < 4; i++) {
+        const idx = Math.floor(Math.random() * numbers.length); // numbers 길이에 맞춰 곱하는 숫자가 줄어들어야함.
+        answer.push(numbers[idx]);
+        numbers.splice(idx, 1);
+      }
+      console.log(answer);
+      const tries = [];
+      function checkInput(input) {
+        // 값 조건 검사
+        if (input.length !== 4) {
+          // 길이가 4가 아니면
+          return alert("4자리 숫자를 입력하세요.");
+        }
+        if (new Set(input).size !== 4) {
+          // 중복숫자가 있으면
+          return alert("중복된 숫자를 입력했습니다.");
+        }
+        if (tries.includes(input)) {
+          // 이미 시도한 값인지
+          return alert("이미 시도한 값입니다.");
+        }
+        return true;
+      }
+
+      let out = 0;
+
+      $form.addEventListener("submit", () => {
+        event.preventDefault();
+        const value = $input.value; // input창의 입력 값 따옴
+        $input.value = ""; // input창 입력값 초기화
+        const valid = checkInput(value); // 올 수 있는 값인지 검사
+
+        if (!valid) return; // false면 이벤트 실행X
+        if (answer.join("") === value) {
+          $logs.textContent = "홈런!";
+          return;
+        }
+        if (tries.length >= 9) {
+          const message = document.createTextNode(
+            `패배! 정답은 ${answer.join("")}`
+          );
+          $logs.appendChild(message);
+          return;
+        }
+
+        let strike = 0;
+        let ball = 0;
+
+        for (let i = 0; i < answer.length; i++) {
+          const index = value.indexOf(answer[i]); // 입력값에서 answer[i]에 해당하는 부분이 몇번째인지
+          if (index > -1) {
+            //일치하는 숫자 발견(0~length-1)
+            if (index === i) {
+              strike += 1;
+            } else {
+              ball += 1;
+            }
+          }
+        }
+        if (!strike && !ball) {
+          out += 1;
+          $logs.append(`${value}: ${out} 아웃`, document.createElement("br"));
+
+          if (out === 3) {
+            const message = document.createTextNode(
+              `패배! 정답은 ${answer.join("")}`
+            );
+            $logs.appendChild(message);
+            return;
+          }
+        } else {
+          $logs.append(
+            `${value}: ${strike} 스트라이크, ${ball} 볼`,
+            document.createElement("br")
+          );
+        }
+
+        tries.push(value);
+      });
+    </script>
+  </body>
+</html>
