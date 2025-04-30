@@ -55,8 +55,9 @@
     }
     let intervalId = setInterval(changeComputerHand, 50);
     let clickable = true;
-    let score = 0;
-
+    // let score = 0;
+    let computer = 0;
+    let me = 0;
     const clickButton = (e) => { // 가위,바위,보 버튼 이벤트
       if(clickable){
         clearInterval(intervalId); // 실행 멈춤
@@ -73,21 +74,30 @@
         let message='';
         if([2,-1].includes(diff)){
           message='승리';
-          score+=1;
+          // score+=1;
+          me+=1;
         }else if ([-2,1].includes(diff)){
           message='패배';
-          score-=1;
+          // score-=1;
+          computer+=1;
         }else{
           message='무승부'
         }
-        $score.textContent = `총: ${score}점`;
-        $result.textContent = `${message}!`
+        // $score.textContent = `총: ${score}점`;
+        $score.textContent = `컴퓨터: ${computer}, 나: ${me}`;
         
-        setTimeout(()=>{
-          //이벤트 추가
-          clickable = true;
-          intervalId = setInterval(changeComputerHand, 50);
-        },1000); // 1초 뒤에 다시 실행
+        if(me === 3){
+          $result.textContent = `승리하셨습니다!`;
+        } else if (computer === 3){
+          $result.textContent = `패배하셨습니다!`;
+        }else {
+          $result.textContent = `${message}!`
+          setTimeout(()=>{
+            //이벤트 추가
+            clickable = true;
+            intervalId = setInterval(changeComputerHand, 50);
+          },1000); // 1초 뒤에 다시 실행
+        }
       }
     };
     //최초에 이벤트 등록
