@@ -28,7 +28,7 @@ class Game {
     $battleMenu.addEventListener('submit', this.onBattleMenuInput);
     this.changeScreen('game');
     this.hero = new Hero(name, this);
-    this.showMessage('');
+    this.showMessage(`원하는 행동을 선택해주세요.`);
     this.updateHeroStat();
   }
   changeScreen(screen){ // 화면전환 메서드
@@ -185,43 +185,3 @@ $startScreen.addEventListener("submit", (e) => {
   const name = e.target["name-input"].value;
   game = new Game(game); // 게임 객체 생성
 });
-
-$gameMenu.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const $menuInput = document.querySelector("#menu-input");
-  const input = $menuInput.value;
-  if (input === "1") { // 모험 선택시
-    $gameMenu.style.display = "none";
-    $battleMenu.style.display = "block";
-    monster = JSON.parse(
-      JSON.stringify(
-        monsterList[Math.floor(Math.random() * monsterList.length)]
-      ) //몬스터 무작위로 가져오기
-    ); 
-
-    //상대할 몬스터 정보 표시
-    monster.maxHp = monster.hp;
-    $monsterName.textContent = monster.name;
-    $monsterHp.textContent = `HP: ${monster.hp}/${monster.maxHp}`;
-    $monsterAtt.textContent = `ATT: ${monster.att}`;
-  } else if (input === '2'){ // 휴식 선택시
-
-  } else if (input === '3'){ // 종료 선택시
-
-  }
-});
-
-$battleMenu.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const input = e.target['battle-input'].value;
-  if(input === '1'){ // 공격
-    hero.attack(monster);
-    $heroHp.textContent = `HP: ${hero.hp}/${hero.maxHp}`;
-    $monsterHp.textContent = `HP" ${monster.hp}/${monster.maxHp}`;
-    $message.textContent = `${hero.att}의 피해를 주고, ${monster.att}의 피해를 받았다.`;
-  } else if(input === '2'){ // 회복
-
-  } else if(input === '3'){ // 도망
-
-  }
-})
